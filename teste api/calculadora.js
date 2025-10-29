@@ -26,10 +26,12 @@ function subtrair(a, b) {
  * @param {number} b - O segundo número.
  * @returns {number} O produto de a e b.
  */
-function multiplicar(a, b) {
-  return a + b; // OOPS! Um bug intencional para vermos o teste falhar.
-}
 
+// ...
+function multiplicar(a, b) {
+  return a * b; // CORRIGIDO! (antes era a + b)
+}
+// ...
 /**
  * Divide o primeiro número pelo segundo.
  * Lança um erro se a divisão for por zero.

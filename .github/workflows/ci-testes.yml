@@ -1,0 +1,59 @@
+# Nome do Workflow
+# Este nome aparecerá na aba "Actions" do seu repositório GitHub.
+name: Testes Unitários (CI)
+
+# Gatilhos (Triggers)
+# Define quando a automação deve ser executada.
+on:
+  # Executa em qualquer 'push' feito para qualquer branch do repositório.
+  push:
+  
+  # Executa também quando um 'pull request' é aberto (ou atualizado)
+  # com o objetivo de fazer merge na branch 'main'.
+  pull_request:
+    branches: [ "main" ]
+
+# Trabalhos (Jobs)
+# Define o conjunto de tarefas que serão executadas.
+jobs:
+  # Definimos um único "trabalho" (job) que chamamos de 'build-e-testar'.
+  # Pode ter qualquer nome.
+  build-e-testar:
+    
+    # Ambiente de Execução
+    # Especifica a máquina virtual onde os comandos serão executados.
+    # 'ubuntu-latest' usa a versão estável mais recente do Ubuntu (Linux).
+    runs-on: ubuntu-latest
+
+    # Passos (Steps)
+    # Define a sequência de ações e comandos a serem executados neste job.
+    steps:
+      # Passo 1: Checkout do código
+      # Esta ação (oficial do GitHub) baixa o código do seu repositório
+      # para a máquina virtual para que os próximos passos possam usá-lo.
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Passo 2: Configurar o ambiente Node.js
+      # Esta ação (oficial) instala a versão especificada do Node.js
+      # na máquina virtual.
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Estamos a especificar que queremos usar o Node.js versão 20.
+          node-version: '20'
+          # 'cache: npm' acelera builds futuros guardando as dependências.
+          cache: 'npm'
+
+      # Passo 3: Instalar as dependências do projeto
+      # Executa um comando de terminal.
+      # 'npm ci' é semelhante a 'npm install', mas é mais rápido e seguro
+      # para ambientes de automação (CI), pois usa o 'package-lock.json'.
+      - name: Instalar dependências
+        run: npm ci
+
+      # Passo 4: Rodar os testes
+      # Executa o script de 'test' que definimos no nosso ficheiro 'package.json'.
+      # O 'package.json' diz que "test" significa "jest".
+      - name: Rodar os testes unitários
+        run: npm test
